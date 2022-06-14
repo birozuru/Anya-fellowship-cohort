@@ -1,0 +1,9 @@
+- name: Node config setup
+  hosts: all
+  become: yes
+  roles: 
+    - boot-node
+    - collator-node
+    - rpc-node
+
+
