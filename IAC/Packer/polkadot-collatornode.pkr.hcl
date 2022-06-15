@@ -16,7 +16,7 @@ source "amazon-ebs" "fullNode0" {
 
   source_ami_filter {
     filters = {
-      name                = "*ubuntu-bionic-18.04-amd64-server-*"
+      name                = "*ubuntu-focal-20.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
       architecture        = "x86_64"
@@ -59,7 +59,7 @@ build {
 
   post-processors {
     post-processor "manifest" {
-      output     = "mainnet-manifest.json"
+      output     = "polkadot-manifest.json"
       strip_path = true
     }
   }

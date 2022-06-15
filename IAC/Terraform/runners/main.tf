@@ -1,5 +1,5 @@
 module "github_runner" {
-  source                = "./module"
+  source                = "../../shared-modules/github-runners"
   runner_architecture   = "amd64"
   instance_type         = "t2.micro"
   github_user           = "birozuru"
