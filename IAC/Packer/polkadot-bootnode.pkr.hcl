@@ -11,8 +11,7 @@ source "amazon-ebs" "bootNode" {
   ami_name      = "polkadot-bootNode"
   instance_type = "t2.micro"
   region        = "us-east-1"
-  access_key    = "AKIAWHUKW74SAIZ6ZN6O"
-  secret_key    = "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"
+
 
   source_ami_filter {
     filters = {
