@@ -15,7 +15,7 @@ resource "aws_ebs_volume" "rpc-storage" {
 resource "aws_volume_attachment" "rpcnode-storage-attachment" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.rpc-storage[index(local.rpcnodes, each.key)].id
-  for_each = toset(local.rpcnodes)
+  for_each    = toset(local.rpcnodes)
   instance_id = aws_instance.rpcnode[each.key].id
 
 }
@@ -46,7 +46,7 @@ resource "aws_instance" "rpcnode" {
 #############################################
 
 resource "aws_elb" "rpcnode" {
-  name               = "rpc-elb"
+  name = "rpc-elb"
 
   subnets = ["${aws_subnet.node.id}"]
   listener {
@@ -78,5 +78,5 @@ resource "aws_elb" "rpcnode" {
 resource "aws_elb_attachment" "rpcnode" {
   for_each = aws_instance.rpcnode
   elb      = aws_elb.rpcnode.id
-  instance = aws_instance.rpcnode[each.key].id 
+  instance = aws_instance.rpcnode[each.key].id
 }

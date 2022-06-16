@@ -4,7 +4,7 @@
 locals {
   name      = "polkadot"
   bootnodes = ["${local.name}-bootnode-1", "${local.name}-bootnode-2"]
-  rpcnodes = ["${local.name}-rpcnode-1", "${local.name}-rpcnode-2"]
+  rpcnodes  = ["${local.name}-rpcnode-1", "${local.name}-rpcnode-2"]
 
   tags = {
     Terraform = "true"
@@ -25,8 +25,8 @@ resource "aws_key_pair" "key-node" {
 resource "aws_ebs_volume" "node-storage" {
   availability_zone = var.zone
   size              = 100
-  count = length(local.bootnodes)
-  encrypted = true
+  count             = length(local.bootnodes)
+  encrypted         = true
 
   tags = {
     owner = var.name
@@ -36,7 +36,7 @@ resource "aws_ebs_volume" "node-storage" {
 resource "aws_volume_attachment" "bootnode-storage-attachment" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.node-storage[index(local.bootnodes, each.key)].id
-  for_each = toset(local.bootnodes)
+  for_each    = toset(local.bootnodes)
   instance_id = aws_instance.bootnode[each.key].id
 
 }

@@ -1,19 +1,16 @@
-variable access_key {}
-variable secret_key {}
-variable "project_id" {
-  default = "my_project"
-}
+variable "access_key" {}
+variable "secret_key" {}
 
 variable "location" {
   default = "us-east-1"
 }
 
 variable "zone" {
-  default = "us-east-1c"
+  default = "us-east-1d"
 }
 
 variable "machine_type" {
-  default = "t2.micro"
+  default = "m4.large"
 }
 
 variable "public_key" {
@@ -24,9 +21,6 @@ variable "ssh_user" {
   default = ""
 }
 
-variable "node_count" {
-  default = 1
-}
 
 variable "name" {
   default = "polkadot"
@@ -45,9 +39,9 @@ variable "collator-ports" {
 }
 
 variable "rpc-ports" {
-    default = ["80","443","30333","30334"]
+  default = ["80", "443", "30333", "30334"]
 }
 
 variable "metrics-ports" {
-    default = ["9100","9616"]
+  default = ["9100", "9616"]
 }
