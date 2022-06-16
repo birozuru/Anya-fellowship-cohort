@@ -19,7 +19,7 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: "false"
           ANSIBLE_DEPRECATION_WARNINGS: "false" 
         run: |
-          ansible-playbook -i config/aws_ec2.yml -e 'ansible_python_interpreter=/usr/bin/python3' -vvvv main.yml
+          ansible-playbook -i config/aws_ec2.yml -e 'ansible_python_interpreter=/usr/bin/python3' -vv main.yml
         working-directory: ./IAC/Ansible
 
        
