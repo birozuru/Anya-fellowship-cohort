@@ -1,9 +1,19 @@
-- name: Node config setup
-  hosts: all
+- name: Boot node config setup
+  hosts: tag_Name_boot_node
   become: yes
   roles: 
     - boot-node
-    - collator-node
-    - rpc-node
 
+- name: Collator node setup
+  hosts: tag_Name_collator_node
+  become: yes
+  roles:
+    - collator-node
+
+- name: Rpc node setup
+  hosts: tag_Name_rpc_node
+  become: yes
+  roles:
+    - rpc-node
+ 
 
