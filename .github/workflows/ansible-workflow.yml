@@ -20,6 +20,7 @@ jobs:
           ANSIBLE_DEPRECATION_WARNINGS: "false" 
         run: |
           ansible-playbook -i config/aws_ec2.yml -e 'ansible_python_interpreter=/usr/bin/python3' -vvvv main.yml
+        working-directory: ./IAC/Ansible
 
        
           
