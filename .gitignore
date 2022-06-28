@@ -4,4 +4,3 @@ terraform.tfstate
 *.pem
 terraform.tfstate*
 my_cred
-

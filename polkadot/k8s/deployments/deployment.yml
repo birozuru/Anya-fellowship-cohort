@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polkadot-kusama-1
+  namespace: kusama
+  labels:
+    app: kusama
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kusama
+  template:
+    metadata:
+      labels:
+        app: kusama
+    spec: 
+      containers:
+      - name: kusama
+        image: "docker.io/irozuru/polkadot"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 30333
+      imagePullSecrets:
+      - name: dockerhub
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polkadot-kusama-2
+  namespace: kusama
+  labels:
+    app: kusama
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kusama
+  template:
+    metadata:
+      labels:
+        app: kusama
+    spec:   
+      containers:
+      - name: kusama
+        image: docker.io/irozuru/polkadot
+        command: ["polkadot"]
+        args: ["--collator  --ws-port 9944  --chain=rococo --base-path <path-to-db> --listen-addr=/ip4/0.0.0.0/tcp/30334 --public-addr=/ip4/0.0.0.0/tcp/30334 --execution=wasm --rpc-methods=unsafe  -- --execution=wasm  --listen-addr=/ip4/0.0.0.0/tcp/30333 --public-addr=/ip4/0.0.0.0/tcp/30333]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9933
+      imagePullSecrets:
+      - name: dockerhub
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polkadot-kusama-3
+  namespace: staging
+  labels:
+    app: kusama
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kusama
+  template:
+    metadata:
+      labels:
+        app: kusama
+    spec:  
+      containers:
+      - name: kusama
+        image: docker.io/irozuru/polkadot
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 30334
+      imagePullSecrets:
+      - name: dockerhub
+      restartPolicy: Always
