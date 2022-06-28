@@ -17,13 +17,40 @@ spec:
         app: kusama
     spec:   
       containers:
-      - name: kusama
+      - name: collator-kusama
         image: docker.io/irozuru/polkadot
         command: ["polkadot"]
         args: ["--collator",  "--ws-port", "9944",  "--chain=kusama", "--listen-addr=/ip4/0.0.0.0/tcp/30334", "--public-addr=/ip4/0.0.0.0/tcp/30334", "--execution=wasm", "--rpc-methods=unsafe",  "-- --execution=wasm",  "--listen-addr=/ip4/0.0.0.0/tcp/30333", "--public-addr=/ip4/0.0.0.0/tcp/30333"]
         imagePullPolicy: Always
         ports:
-        - containerPort: 
+          - "30333"
+          - "30334"
+          - "9933"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+      - name: rpc-kusama
+        image: docker.io/irozuru/polkadot
+        command:
+          - "polkadot"
+        args: ["--collator",  "--ws-port", "9944",  "--chain=kusama", "--listen-addr=/ip4/0.0.0.0/tcp/30334", "--public-addr=/ip4/0.0.0.0/tcp/30334", "--execution=wasm", "--rpc-methods=unsafe",  "-- --execution=wasm",  "--listen-addr=/ip4/0.0.0.0/tcp/30333", "--public-addr=/ip4/0.0.0.0/tcp/30333"]
+        imagePullPolicy: Always
+        ports:
+          - "30333"
+          - "30334"
+          - "9933"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
       imagePullSecrets:
       - name: dockerhub
       restartPolicy: Always
