@@ -23,7 +23,7 @@ spec:
         args: ["--collator",  "--ws-port", "9944",  "--chain=kusama", "--listen-addr=/ip4/0.0.0.0/tcp/30334", "--public-addr=/ip4/0.0.0.0/tcp/30334", "--execution=wasm", "--rpc-methods=unsafe",  "-- --execution=wasm",  "--listen-addr=/ip4/0.0.0.0/tcp/30333", "--public-addr=/ip4/0.0.0.0/tcp/30333"]
         imagePullPolicy: Always
         ports:
-        - containerPort:
+        - containerPort: 
       imagePullSecrets:
       - name: dockerhub
       restartPolicy: Always
