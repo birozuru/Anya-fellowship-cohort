@@ -1,0 +1,125 @@
+# Docker compose for grafana monitoring stack with cadvisor and prometheus
+version: "3.7"
+
+services:
+  polkadot:
+    container_name: polkadot
+    image: docker.io/irozuru/polkadot:v1
+    restart: always
+    ports:
+      - 30333:30333/tcp # p2p port
+      - 9933:9933/tcp # rpc port
+      - 9944:9944/tcp # ws port
+      - 9615:9615/tcp # prometheus port
+    volumes:
+      - ./node-data/polkadot:/node-data
+    entrypoint: ["/bin/bash", "-c", "polkadot"]
+    command: 
+      - --rpc-external
+      - --ws-external
+      - --rpc-cors
+      - all
+      - --chain=kusama
+      - --pruning
+      - archive
+      - -d
+      - /node-data/
+    networks:
+      kusama-net:
+        ipv4_address: 172.20.0.6
+    expose:
+      - 9615
+      - 9933
+      - 9944
+      - 30333
+      
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./node-data/grafana:/var/lib/grafana
+      - ./node-data/grafana/provisioning/:/etc/grafana/provisioning/
+    networks:
+      kusama-net:
+        ipv4_address: 172.20.0.2
+    depends_on:
+      - polkadot
+      - prometheus
+    env_file:
+      - ./node-data/grafana/config.monitoring
+
+  prometheus:
+    container_name: prometheus
+    user: root
+    image: prom/prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./node-data/prometheus:/var/lib/prometheus
+      - ./node-data/prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      kusama-net:
+        ipv4_address: 172.20.0.3
+    depends_on:
+      - polkadot
+      - cadvisor
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8080:8080
+    networks:
+      kusama-net:
+        ipv4_address: 172.20.0.4
+    deploy:
+      mode: global
+
+  node-exporter:
+    container_name: node-exporter
+    image: quay.io/prometheus/node-exporter:latest
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /:/host:ro
+    command: 
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    ports:
+      - 9100:9100
+    restart: always
+    expose:
+      - 9100
+    networks:
+      kusama-net:
+        ipv4_address: 172.20.0.5
+
+    deploy:
+      mode: global
+    
+networks:
+  kusama-net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+
