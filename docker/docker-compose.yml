@@ -2,36 +2,38 @@
 version: "3.7"
 
 services:
-  polkadot:
-    container_name: polkadot
-    image: docker.io/irozuru/polkadot:v1
-    restart: always
-    ports:
-      - 30333:30333/tcp # p2p port
-      - 9933:9933/tcp # rpc port
-      - 9944:9944/tcp # ws port
-      - 9615:9615/tcp # prometheus port
-    volumes:
-      - ./node-data/polkadot:/node-data
-    entrypoint: ["/bin/bash", "-c", "polkadot"]
-    command: 
-      - --rpc-external
-      - --ws-external
-      - --rpc-cors
-      - all
-      - --chain=kusama
-      - --pruning
-      - archive
-      - -d
-      - /node-data/
-    networks:
-      kusama-net:
-        ipv4_address: 172.20.0.6
-    expose:
-      - 9615
-      - 9933
-      - 9944
-      - 30333
+  # polkadot:
+  #   container_name: polkadot
+  #   image: docker.io/irozuru/polkadot:v1
+  #   restart: always
+  #   ports:
+  #     - 30333:30333/tcp # p2p port
+  #     - 9933:9933/tcp # rpc port
+  #     - 9944:9944/tcp # ws port
+  #     - 9615:9615/tcp # prometheus port
+  #   volumes:
+  #     - ./node-data/polkadot:/node-data
+  #   entrypoint: ["/bin/bash", "-c", "polkadot"]
+  #   command: 
+  #     - --rpc-external
+  #     - --rpc-methods=unsafe
+  #     - --ws-external
+  #     - --unsafe-ws-external
+  #     - --rpc-cors
+  #     - all
+  #     - --chain=kusama
+  #     - --pruning
+  #     - archive
+  #     - -d
+  #     - /node-data/
+  #   networks:
+  #     kusama-net:
+  #       ipv4_address: 172.20.0.6
+  #   expose:
+  #     - 9615
+  #     - 9933
+  #     - 9944
+  #     - 30333
       
   grafana:
     container_name: grafana
@@ -46,7 +48,7 @@ services:
       kusama-net:
         ipv4_address: 172.20.0.2
     depends_on:
-      - polkadot
+      # - polkadot
       - prometheus
     env_file:
       - ./node-data/grafana/config.monitoring
@@ -61,6 +63,7 @@ services:
     volumes:
       - ./node-data/prometheus:/var/lib/prometheus
       - ./node-data/prometheus_data:/prometheus
+      - ./node-data/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -70,7 +73,7 @@ services:
       kusama-net:
         ipv4_address: 172.20.0.3
     depends_on:
-      - polkadot
+      # - polkadot
       - cadvisor
 
   cadvisor:

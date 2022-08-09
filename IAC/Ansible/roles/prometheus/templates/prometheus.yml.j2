@@ -1,0 +1,27 @@
+{% set domain_split = ansible_domain.split('.') %}
+global:
+  scrape_interval: 15s
+
+remote_write:
+  - url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom
+    basic_auth:
+      username: "admin"
+      password: {{ grafana_prom_password }}
+
+scrape_configs:
+  - job_name: 'anya-nodes'
+    ec2_sd_configs:
+      - region: us-east-1
+        port: 9615
+        filters:
+          - name: instance-id
+
+    relabel_configs:
+     - source_labels: [__meta_ec2_public_ip]
+        replacement: '${1}:your port number'
+        target_label: __address__
+ 
+     - source_labels: [__meta_ec2_tag_Name]
+       target_label: instance            
+
+   

@@ -2,14 +2,19 @@
 Description=Bootnode
 
 [Service]
-ExecStart=polkadot --name anya-polkadot-bootnode  --pruning=archive \
---chain=rococo --base-path=polkadot  \
---listen-addr=/ip4/0.0.0.0/tcp/30334 --public-addr=/ip4/0.0.0.0/tcp/30334 \
+ExecStart=polkadot --name parachain-bootnode-0 --base-path polkadot \
+--node-key-file /path/to/node/key \ # Must be kept static for bootnodes (generate it with subkey and store safely), the bootnodes ID will also be set into the chainspec
+--chain=parachain --listen-addr=/ip4/0.0.0.0/tcp/30334 --public-addr=/ip4/44.204.184.191/tcp/30334 \
+--listen-addr /ip6/::/tcp/30334 \ # For those who want to use ipv6
 --execution=wasm --rpc-methods=unsafe  \
---listen-addr=/ip4/0.0.0.0/tcp/30333 --public-addr=/ip4/0.0.0.0/tcp/30333
-
+--in-peers 50 --out-peers 50 \
+--prometheus-external --prometheus-port 9615 \
+--ws-port 8844 --rpc-port 8833
+ 
 Restart=always
 RestartSec=120
 
 [Install]
 WantedBy=multi-user.target
+
+

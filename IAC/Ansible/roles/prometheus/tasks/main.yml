@@ -1,0 +1,48 @@
+# prometheus/main.yml
+
+# Version: 2.33.3
+- name: Download Promethus Package
+  get_url:
+    url: https://github.com/prometheus/prometheus/releases/download/v2.33.3/prometheus-2.33.3.linux-amd64.tar.gz
+    dest: /tmp
+
+- name: Create Prometheus Directory
+  file:
+    path: /etc/prometheus
+    state: directory
+
+- name: Create Prometheus Configuration
+  vars:
+    grafana_prom_password: "admin"
+    env: "{{ lookup('env','ENVIRONMENT') }}"
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+
+- name: Extract Prometheus Package
+  unarchive:
+    src: /tmp/prometheus-2.33.3.linux-amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+    extra_opts:
+        - "--strip-components=1"
+        - "prometheus-2.33.3.linux-amd64/prometheus"
+
+- name: Copy Prometheus unit File
+  copy:
+    src: "prometheus.service"
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+
+- name: Reload SystemD Daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and Start Prometheus  SystemD Services
+  systemd:
+    name: prometheus.service
+    enabled: yes
+    state: restarted
