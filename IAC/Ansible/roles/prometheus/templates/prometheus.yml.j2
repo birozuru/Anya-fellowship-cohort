@@ -8,20 +8,21 @@ remote_write:
       username: "admin"
       password: {{ grafana_prom_password }}
 
-scrape_configs:
-  - job_name: 'anya-nodes'
-    ec2_sd_configs:
-      - region: us-east-1
-        port: 9615
-        filters:
-          - name: instance-id
 
-    relabel_configs:
-     - source_labels: [__meta_ec2_public_ip]
-        replacement: '${1}:your port number'
-        target_label: __address__
- 
-     - source_labels: [__meta_ec2_tag_Name]
-       target_label: instance            
+rule_files:
+  - {{ prometheus_config_dir }}/rules/*.rules
+
+{% if prometheus_alertmanager_config | length > 0 %}
+alerting:
+  alertmanagers:
+  {{ prometheus_alertmanager_config | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
+  {% if prometheus_alert_relabel_configs | length > 0 %}
+  alert_relabel_configs:
+  {{ prometheus_alert_relabel_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
+  {% endif %}
+{% endif %}
 
    
+
+scrape_configs:
+  {{ prometheus_scrape_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}

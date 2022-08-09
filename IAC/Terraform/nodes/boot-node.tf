@@ -37,28 +37,35 @@ resource "aws_volume_attachment" "bootnode-storage-attachment" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.node-storage[index(local.bootnodes, each.key)].id
   for_each    = toset(local.bootnodes)
-  instance_id = aws_instance.bootnode[each.key].id
+  instance_id = module.bootnode[each.key].id
 
 }
 
 #############################################
 # BOOT NODE
 #############################################
-resource "aws_instance" "bootnode" {
+module "bootnode" {
+  source = "terraform-aws-modules/ec2-instance/aws"
+
   ami           = var.image
   instance_type = var.machine_type
   key_name      = var.name
+  
   for_each      = toset(local.bootnodes)
 
-  subnet_id              = aws_subnet.node.id
+  subnet_id           = aws_subnet.node.id
+
   vpc_security_group_ids = ["${aws_security_group.bootnode.id}"]
 
-  root_block_device {
+  root_block_device = [{
+    encrypted  = true
+    delete_on_termination = true
     volume_size = 150
-  }
+  }]
 
   tags = {
     Name = var.name
   }
+
 }
 
