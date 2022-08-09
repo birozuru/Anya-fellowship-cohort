@@ -61,3 +61,4 @@ resource "aws_instance" "bootnode" {
     Name = var.name
   }
 }
+

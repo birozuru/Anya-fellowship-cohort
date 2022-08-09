@@ -1,4 +1,10 @@
 terraform {
+  backend "s3" {
+    bucket = "anya-iac-terraform-state"
+    key    = "anya-iac-terraform-state/iac-terraform-state.tfstate"
+    region = "us-east-1"
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
