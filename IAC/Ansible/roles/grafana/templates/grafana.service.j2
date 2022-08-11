@@ -1,0 +1,18 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Grafana - analytics and monitoring observability service
+After=network-online.target
+Requires=local-fs.target
+After=local-fs.target
+
+[Service]
+Type=simple
+User=grafana
+Group=grafana
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ install_dir }}/bin/grafana-server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

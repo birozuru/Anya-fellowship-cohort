@@ -1,0 +1,12 @@
+[Unit]
+Description=Prometheus Monitoring Server
+
+[Service]
+ExecStart=/usr/local/bin/prometheus \
+        --config.file=/etc/prometheus/prometheus.yml \
+        --storage.tsdb.path=/var/prometheus \
+        --storage.tsdb.retention.time=1d
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

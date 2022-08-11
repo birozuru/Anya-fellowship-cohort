@@ -96,3 +96,62 @@ resource "aws_security_group_rule" "bootnode-metrics" {
 
   security_group_id = aws_security_group.bootnode.id
 }
+
+
+
+resource "aws_security_group_rule" "ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["160.119.126.13/32"]
+  security_group_id = aws_security_group.bootnode.id
+}
+
+resource "aws_security_group_rule" "rpc_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["160.119.126.13/32"]
+  security_group_id = aws_security_group.rpcnode.id
+}
+
+resource "aws_security_group_rule" "collator_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["160.119.126.13/32"]
+  security_group_id = aws_security_group.collator.id
+}
+
+# resource "aws_security_group_rule" "bootnode_egress" {
+#   for_each          = toset(var.bootnode-ports)
+#   type              = "egress"
+#   from_port         = 0
+#   to_port           = 0
+#   protocol          = "-1"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.bootnode.id
+# }
+
+# resource "aws_security_group_rule" "rpc_egress" {
+#   for_each          = toset(var.bootnode-ports)
+#   type              = "egress"
+#   from_port         = 0
+#   to_port           = 0
+#   protocol          = "-1"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.rpcnode.id
+# }
+
+# resource "aws_security_group_rule" "collator_egress" {
+#   for_each          = toset(var.bootnode-ports)
+#   type              = "egress"
+#   from_port         = 0
+#   to_port           = 0
+#   protocol          = "-1"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.collator.id
+# }

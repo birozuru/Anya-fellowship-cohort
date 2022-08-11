@@ -6,11 +6,11 @@ variable "location" {
 }
 
 variable "zone" {
-  default = "us-east-1d"
+  default = "us-east-1a"
 }
 
 variable "machine_type" {
-  default = "m4.large"
+  default = "t2.micro"
 }
 
 variable "public_key" {
@@ -18,7 +18,7 @@ variable "public_key" {
 }
 
 variable "ssh_user" {
-  default = ""
+  default = "ubuntu"
 }
 
 

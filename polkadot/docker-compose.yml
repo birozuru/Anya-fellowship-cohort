@@ -1,4 +1,5 @@
-version: '2'
+# Docker compose for grafana monitoring stack with cadvisor and prometheus
+version: "3.7"
 
 services:
   polkadot:
@@ -34,6 +35,45 @@ services:
       - polkadot:polkadot
     networks:
       - kusama-net
+  
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./node-data:/var/lib/grafana
+    networks:
+      - kusama-net
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./node-data:/var/lib/prometheus
+    networks:
+      - kusama-net
+  cadvisor:
+    container_name: cadvisor
+    image: google/cadvisor
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - kusama-net
+  nodeexporter:
+    container_name: nodeexporter
+    image: prom/node-exporter
+    restart: always
+    ports:
+      - 9100:9100
+    networks:
+      - kusama-net
+
+    
 networks:
   kusama-net:
     driver: bridge
@@ -41,4 +81,4 @@ networks:
       driver: default
       config:
         - subnet: 10.103.0.1/16
- 
+

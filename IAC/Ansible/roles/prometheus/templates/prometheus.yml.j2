@@ -1,0 +1,26 @@
+{% set domain_split = ansible_domain.split('.') %}
+global:
+  scrape_interval: 15s
+
+remote_write:
+  - url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom
+    basic_auth:
+      username: "admin"
+      password: {{ grafana_prom_password }}
+
+
+rule_files:
+  - {{ prometheus_config_dir }}/rules/*.rules
+
+{% if prometheus_alertmanager_config | length > 0 %}
+alerting:
+  alertmanagers:
+  {{ prometheus_alertmanager_config | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
+  {% if prometheus_alert_relabel_configs | length > 0 %}
+  alert_relabel_configs:
+  {{ prometheus_alert_relabel_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
+  {% endif %}
+{% endif %}   
+
+scrape_configs:
+  {{ prometheus_scrape_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}

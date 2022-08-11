@@ -10,11 +10,15 @@
 
     # DOWNLOAD BINARIES 
 - name: Import the security@parity.io GPG key
+  vars:
+    GPG_KEY: '9D4B2B6EB8F97156D19669A9FF0812D491B96798'
   shell:
-        "gpg --recv-keys --keyserver keyserver.ubuntu.com 9D4B2B6EB8F97156D19669A9FF0812D491B96798 "
+        "gpg --recv-keys --keyserver keyserver.ubuntu.com {{GPG_KEY}}"
 
 - name: export the security@parity.io GPG key
-  shell: gpg --export 9D4B2B6EB8F97156D19669A9FF0812D491B96798 > /usr/share/keyrings/parity.gpg
+  vars:
+    GPG_KEY: '9D4B2B6EB8F97156D19669A9FF0812D491B96798' 
+  shell: gpg --export {{ GPG_KEY }} > /usr/share/keyrings/parity.gpg
 
     # # Add the Parity repository and update the package index    
 - name: Add the Parity repository and update the package index 
@@ -41,3 +45,21 @@
     name: collatornode.service
     state: started
     enabled: yes
+
+- name: Create Polkadot directory (/etc/polkadot)
+  file:
+    path: "/etc/polkadot"
+    state: directory
+
+- name: Create Polkadot Relay Chain directory
+  file:
+    path: "/etc/polkadot/relaychain"
+    state: directory
+
+- name: journald template
+  shell: journalctl --vacuum-size=500M --vacuum-time=2d --rotate 
+
+- name: reload systemd-journald
+  systemd:
+   name: systemd-journald
+   state: restarted
