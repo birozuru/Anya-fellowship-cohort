@@ -1,9 +1,9 @@
-- name: Boot node config setup
-  hosts: boot-nodes
-  become: yes
-  become_user: root
-  roles: 
-    - boot-node
+# - name: Boot node config setup
+#   hosts: boot-nodes
+#   become: yes
+#   become_user: root
+#   roles: 
+#     - boot-node
 
 - name: Collator node setup
   hosts: collator-nodes

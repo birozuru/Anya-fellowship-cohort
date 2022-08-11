@@ -57,9 +57,9 @@
     state: directory
 
 - name: journald template
-  shell: journalctl --vacuum-size=500M --vacuum-time=2d --rotate=weekly --compress
+  shell: journalctl --vacuum-size=500M --vacuum-time=2d --rotate 
 
 - name: reload systemd-journald
   systemd:
    name: systemd-journald
-   state: restart 
+   state: restarted 
