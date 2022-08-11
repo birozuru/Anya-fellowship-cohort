@@ -20,9 +20,7 @@ alerting:
   alert_relabel_configs:
   {{ prometheus_alert_relabel_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
   {% endif %}
-{% endif %}
-
-   
+{% endif %}   
 
 scrape_configs:
   {{ prometheus_scrape_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}

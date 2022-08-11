@@ -1,0 +1,17 @@
+---
+- name: Setup systemd init
+  template:
+    src: grafana.service.j2
+    dest: /etc/systemd/system/grafana.service
+    owner: root
+    group: root
+    mode: 0644  
+
+- name: Ensure start of grafana service
+  become: true
+  service:
+    name: "{{ _service_name }}"
+    state: started
+    enabled: "yes"
+  tags:
+    - launch

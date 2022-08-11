@@ -63,15 +63,15 @@ ReadOnlyDirectories={{ path }}
 {% endfor %}
 {% endif %}
 
-{% if prometheus_systemd_version | int >= 232 %}
-PrivateUsers=true
-ProtectControlGroups=true
-ProtectKernelModules=true
-ProtectKernelTunables=true
-ProtectSystem=strict
-{% else %}
-ProtectSystem=full
-{% endif %}
+#{% if prometheus_systemd_version | int >= 232 %}
+#PrivateUsers=true
+#ProtectControlGroups=true
+#ProtectKernelModules=true
+#ProtectKernelTunables=true
+#ProtectSystem=strict
+#{% else %}
+#ProtectSystem=full
+#{% endif %}
 
 {% if http_proxy is defined %}
 Environment="HTTP_PROXY={{ http_proxy }}"{% if https_proxy is defined %} "HTTPS_PROXY={{ https_proxy }}{% endif %}"

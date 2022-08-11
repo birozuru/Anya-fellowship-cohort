@@ -6,7 +6,7 @@ variable "location" {
 }
 
 variable "zone" {
-  default = "us-east-1d"
+  default = "us-east-1a"
 }
 
 variable "machine_type" {

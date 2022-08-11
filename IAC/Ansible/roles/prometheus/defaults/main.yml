@@ -6,6 +6,9 @@ prometheus_skip_install: false
 prometheus_config_dir: /etc/prometheus
 prometheus_db_dir: /var/lib/prometheus
 prometheus_read_only_dirs: []
+prometheus_metrics_path: /etc/prometheus
+prometheus_systemd_version: 
+grafana_prom_password: 'password1234'
 
 prometheus_web_listen_address: "0.0.0.0:9090"
 prometheus_web_external_url: ''
@@ -16,9 +19,6 @@ prometheus_web_config:
   basic_auth_users: {}
 
 prometheus_storage_retention: "30d"
-# Available since Prometheus 2.7.0
-# [EXPERIMENTAL] Maximum number of bytes that can be stored for blocks. Units
-# supported: KB, MB, GB, TB, PB.
 prometheus_storage_retention_size: "0"
 
 prometheus_config_flags_extra: {}
@@ -83,17 +83,7 @@ prometheus_scrape_configs:
   - job_name: 'anya-nodes'
     ec2_sd_configs:
       - region: us-east-1
-        port: 9615
-        filters:
-          - name: instance-id
-
-    relabel_configs:
-      - source_labels: [__meta_ec2_public_ip]
-        replacement: '${1}:your port number'
-        target_label: __address__
- 
-      - source_labels: [__meta_ec2_tag_Name]
-        target_label: instance           
+        port: 9615          
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'

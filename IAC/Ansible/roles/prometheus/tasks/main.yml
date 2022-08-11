@@ -1,5 +1,3 @@
-# prometheus/main.yml
-
 # Version: 2.33.3
 - name: create prometheus system group
   group:
@@ -62,7 +60,6 @@
     owner: root
     group: prometheus
     mode: 0640
-    validate: "{{ _prometheus_binary_install_dir }}/promtool check rules %s"
   when:
     - prometheus_alert_rules != []
   notify:
@@ -110,6 +107,14 @@
     group: prometheus
     mode: 0640
   with_fileglob: "{{ prometheus_static_targets_files }}"
+
+- name: create systemd service unit
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: 0644  
 
 - name: Reload SystemD Daemon
   systemd:
